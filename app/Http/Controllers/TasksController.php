@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Task;
+use App\User;
 
 class TasksController extends Controller
 {
@@ -15,11 +16,23 @@ class TasksController extends Controller
     public function index()
     {
         //
-        $tasks = Task::all();
+
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
+            
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+        }
         
-        return view('tasks.index',[
-            'tasks' => $tasks,
-            ]);
+        return view('tasks.index', $data);
+        
+        
+        
+
     }
 
     /**
@@ -44,19 +57,33 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //1113追加
+        $this->validate($request, [
+            'content' => 'required|max:191',
+            'status' => 'required|max:10',
+        ]);
+
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
+
+        return redirect('tasks.index');
         
+        /*
         $this->validate($request, [
             'content' => 'required|max:191',
             'status' => 'required|max:10',
         ]);
         
         $task = new Task;
+        //$task ->user_id = $request->user_id;
         $task ->content = $request->content;
         $task->status = $request->status;
         $task ->save();
         
-        return redirect('/');
+        return redirect('/tasks');
+        */
     }
 
     /**
@@ -100,18 +127,32 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        //1113追加
         $this->validate($request, [
             'content' => 'required|max:191',
             'status' => 'required|max:10',
         ]);
+
+        /*これだと動くけどレコードが増えるだけ
+        $request->user()->tasks()->create([
+            //'user_id' => $request->user_id,
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
+        */
+        
+        
         
         $task=Task::find($id);
+        $task ->user_id;
         $task->content = $request->content;
         $task->status = $request->status;
         $task->save();
         
-        return redirect('/');
+        return redirect('tasks.index');
+        
+        
+        
     }
 
     /**
@@ -124,8 +165,19 @@ class TasksController extends Controller
     {
         //
         $task = Task::find($id);
+
+        if (\Auth::id() === $task->user_id) {
+            $task->delete();
+        }
+
+        
+        return redirect('tasks.index');
+        
+        /*
+        $task = Task::find($id);
         $task ->delete();
         
         return redirect('/');
+        */
     }
 }
