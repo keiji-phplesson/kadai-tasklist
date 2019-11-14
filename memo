@@ -19,3 +19,16 @@ ec2-174-129-253-140.compute-1.amazonaws.com
 dckfsdq4j8oiqj
 
 heroku config:set DB_CONNECTION=pgsql DB_USERNAME=vqdhzgeubbswry DB_PASSWORD=2731c0248b67e501d487ea3a0d90a339047db8a315621f18157330cae2f9ae40 DB_HOST=ec2-174-129-253-140.compute-1.amazonaws.com DB_DATABASE=dckfsdq4j8oiqj
+
+デプロイしなおす時
+heroku config:set 前回のやつを入力すると下のが出てくる。
+
+DB_CONNECTION: pgsql
+DB_DATABASE:   d57gprtcj7ffin
+DB_HOST:       ec2-174-129-253-62.compute-1.amazonaws.com
+DB_PASSWORD:   59218a8b8373b5d3a43c46f6c9096da507d0eb3416f1165c136626c1328f7513
+DB_USERNAME:   rvrrcsamcwkorg
+
+heroku config:set DB_CONNECTION=pgsql DB_USERNAME=rvrrcsamcwkorg DB_PASSWORD=59218a8b8373b5d3a43c46f6c9096da507d0eb3416f1165c136626c1328f7513 DB_HOST=ec2-174-129-253-62.compute-1.amazonaws.com DB_DATABASE=d57gprtcj7ffin
+代入しなおして
+heroku run php artisan migrate

@@ -3,6 +3,7 @@
 @section('content')
 
 <!-- ここにページ毎のコンテンツを書く -->
+@if (Auth::id() == $task->user_id)
     <h1>id: {{ $task->id }} の編集ページ</h1>
 
     <div class="row">
@@ -24,5 +25,5 @@
             {!! Form::close() !!}
         </div>
     </div>
-
+@endif
 @endsection

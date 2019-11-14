@@ -68,7 +68,8 @@ class TasksController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect('tasks.index');
+        //return redirect('tasks.index');
+        return redirect('/tasks');
         
         /*
         $this->validate($request, [
@@ -95,11 +96,15 @@ class TasksController extends Controller
     public function show($id)
     {
         //
+        if (\Auth::check()) {
         $task = Task::find($id);
+        
         
         return view('tasks.show',[
             'task' => $task,
             ]);
+        
+        }
     }
 
     /**
@@ -111,11 +116,14 @@ class TasksController extends Controller
     public function edit($id)
     {
         //
+        if (\Auth::check()) {
         $task = Task::find($id);
         
         return view('tasks.edit', [
             'task' => $task,
             ]);
+        }
+    
     }
 
     /**
@@ -149,7 +157,7 @@ class TasksController extends Controller
         $task->status = $request->status;
         $task->save();
         
-        return redirect('tasks.index');
+        return redirect('/tasks');
         
         
         
@@ -164,14 +172,14 @@ class TasksController extends Controller
     public function destroy($id)
     {
         //
-        $task = Task::find($id);
-
+        
+            $task = Task::find($id);
         if (\Auth::id() === $task->user_id) {
             $task->delete();
         }
 
         
-        return redirect('tasks.index');
+        return redirect('/tasks');
         
         /*
         $task = Task::find($id);

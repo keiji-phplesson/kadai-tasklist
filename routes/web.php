@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
    
-Route::get('tasks.index', 'TasksController@index');
+//Route::get('tasks.index', 'TasksController@index');
 
 // ユーザ機能
 Route::group(['middleware' => ['auth']], function () {
